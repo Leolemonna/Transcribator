@@ -17,9 +17,9 @@ name_of_the_audio = ''
 name_of_the_result = ''
 clipboard_text = ''
 
-input_fields = list()
-buttons = list()
-buttons_ready = list()
+input_fields = []
+buttons = []
+buttons_ready = []
 #variables init end
 
 
@@ -135,25 +135,4 @@ while running:
             button.state = 0
 pygame.quit()
 exit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # pygame setup
