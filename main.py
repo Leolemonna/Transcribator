@@ -38,11 +38,11 @@ def check_all_buttons_ready(except_buttons: list):
 #Inisialisations of the input fields and buttons
 main_screen = render.Screen((600,500))
 input_fields.append(render.InputField(main_screen, position = (10, 10), font = None, font_colour = (0, 0, 0), font_size = 22, bg_colour1 = INFIELDS_COLOURS[1], bg_colour2 = INFIELDS_COLOURS[0], 
-                                      offset = 7, border = 4, min_width = 50, extra_width = 10))
+                                      offset = 5, border = 3, min_width = 50, extra_width = 10))
 input_fields.append(render.InputField(main_screen, position = (10, 40), font = None, font_colour = (0, 0, 0), font_size = 22, bg_colour1 = INFIELDS_COLOURS[1], bg_colour2 = INFIELDS_COLOURS[0], 
-                                      offset = 7, border = 4, min_width = 50, extra_width = 10))
+                                      offset = 5, border = 3, min_width = 50, extra_width = 10))
 input_fields.append(render.InputField(main_screen, position = (10, 70), font = None, font_colour = (0, 0, 0), font_size = 22, bg_colour1 = INFIELDS_COLOURS[1], bg_colour2 = INFIELDS_COLOURS[0], 
-                                      offset = 7, border = 4, min_width = 50, extra_width = 10))
+                                      offset = 5, border = 3, min_width = 50, extra_width = 10))
 
 buttons.append(render.Button(main_screen, position = (440, 10), text='Submit audio name',font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS,      #button 0
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
@@ -106,7 +106,7 @@ while running:
 
     main_screen.clock.tick(120)  # limits FPS to 120
     
-    if check_all_buttons_ready(except_buttons=(3)):
+    if check_all_buttons_ready(except_buttons=[3]):
         #OpenAi inisialisation
         if not openai_inisialised:
             try:
