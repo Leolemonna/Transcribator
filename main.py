@@ -22,6 +22,18 @@ buttons = []
 buttons_ready = []
 #variables init end
 
+def check_all_buttons_ready(except_buttons: list):
+    new_buttons_ready = []
+    for index in range(len(buttons_ready)):
+        if index in except_buttons:
+            continue
+        else:
+            new_buttons_ready.append(buttons_ready[index])
+    
+    if all(new_buttons_ready):
+        return True
+    else:
+        return False        
 
 #Inisialisations of the input fields and buttons
 main_screen = render.Screen((600,500))
@@ -94,7 +106,7 @@ while running:
 
     main_screen.clock.tick(120)  # limits FPS to 120
     
-    if all(buttons_ready):
+    if check_all_buttons_ready(except_buttons=(3)):
         #OpenAi inisialisation
         if not openai_inisialised:
             try:
@@ -133,6 +145,7 @@ while running:
         
         for button in buttons:
             button.state = 0
+            
 pygame.quit()
 exit()
 # pygame setup
