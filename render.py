@@ -6,7 +6,7 @@ VERSION = "v0.2a"
 
 
 class Screen:
-    def __init__(self, size: list, caption = "Trinscribe for mama " + VERSION, fill = (250,250,250)):
+    def __init__(self, size: list, caption = "Transcribator " + VERSION, fill = (250,250,250)):
         pygame.init()
         self.display = pygame.display
         self.screen = self.display.set_mode(size)
