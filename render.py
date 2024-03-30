@@ -76,7 +76,7 @@ class InputField:
 
 
 class Button:   
-    def __init__(self, screen: Screen, text = 'Submit',rect_padding: bool = False, **kwargs):
+    def __init__(self, screen: Screen, text = 'Submit', rect_padding: bool = False, **kwargs):
         self.screen = screen
 
         #   states:
@@ -101,16 +101,27 @@ class Button:
         self.extra_Rectboder = kwargs["extra_Rectborder"]
 
         if self.rect_padding_bool:
-            self.rect_padding = pygame.Rect(self.pos[0]-1, self.pos[1]-1, self.width, self.font_size)
+            self.rect_padding = pygame.Rect(self.pos[0], self.pos[1], self.width, self.font_size)
         
         self.rect = pygame.Rect(self.pos[0], self.pos[1], self.width, self.font_size)
 
         self.surface_font = pygame.font.Font(self.font,self.font_size)
         
+        self._draw_text() # I called it here just to create self.img tbh, idk why i didnt just put in self.img = ...
+        
     def display(self):
-        pygame.draw.rect(self.screen.screen, self.bg_colours[self.state], self.rect, self.border)
-        self._draw_text()
         self.rect.w = max(self.width, self.img.get_width()+self.extra_width)
+        
+        pygame.draw.rect(self.screen.screen, self.bg_colours[self.state], self.rect, self.border)
+        if self.rect_padding_bool:
+            self.rect_padding.w = max(self.width, self.img.get_width()+self.extra_width)
+            if self.state == 0:
+                pygame.draw.rect(self.screen.screen, self.bg_colours[4], self.rect_padding, self.extra_Rectboder)
+            else:
+                pygame.draw.rect(self.screen.screen, self.bg_colours[self.state-1], self.rect_padding, self.extra_Rectboder)
+        self._draw_text()
+        
+        
     
     def _draw_text(self):
         self.img = self.surface_font.render(self.text, True, self.font_colour)
@@ -131,3 +142,9 @@ class Button:
         elif self.state == 2:
             if event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.state = 3
+                
+class Text:
+    """This is a class for writing text in the pygame window"""
+    def __init__(self, text, **kwargs) -> None:
+        self.text = text
+        

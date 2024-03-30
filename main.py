@@ -7,7 +7,7 @@ import pyperclip as pyclip
 print("Done importing ✓")
 
 #variables init
-BUTTON_COLOURS = ((80,80,80), (120,120,120), (120, 230, 120), (100, 255, 100))
+BUTTON_COLOURS = ((80,80,80), (120,120,120), (120, 230, 120), (100, 255, 100), (0, 0, 0)) # the last one is the extra color for padding
 INFIELDS_COLOURS = ((100,100,100), (150,230,150))
 current_api_key = None
 running = True
@@ -44,15 +44,19 @@ input_fields.append(render.InputField(main_screen, position = (10, 40), font = N
 input_fields.append(render.InputField(main_screen, position = (10, 70), font = None, font_colour = (0, 0, 0), font_size = 22, bg_colour1 = INFIELDS_COLOURS[1], bg_colour2 = INFIELDS_COLOURS[0], 
                                       offset = 5, border = 3, min_width = 50, extra_width = 10))
 
-buttons.append(render.Button(main_screen, position = (440, 10), text='Submit audio name',font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS,      #button 0
+buttons.append(render.Button(main_screen, position = (440, 10), rect_padding=True, text='Submit audio name',font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS,      #button 0
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
-buttons.append(render.Button(main_screen, position = (440, 40), text='Submit text file name', font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS, #button 1
+
+buttons.append(render.Button(main_screen, position = (440, 40), rect_padding=True, text='Submit text file name', font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS, #button 1
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
-buttons.append(render.Button(main_screen, position = (440, 70), text='Submit api_key', font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS, 
+
+buttons.append(render.Button(main_screen, position = (440, 70), rect_padding=True, text='Submit api_key', font = None, font_colour = (0, 0, 0), font_size = 22, bg_colours = BUTTON_COLOURS, 
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
-buttons.append(render.Button(main_screen, position = (255, 400), text='Transcribe', font = None, font_colour = (250, 250, 250), font_size = 24, bg_colours = BUTTON_COLOURS,     #button 2
+
+buttons.append(render.Button(main_screen, position = (255, 400), rect_padding=True, text='Transcribe', font = None, font_colour = (250, 250, 250), font_size = 24, bg_colours = BUTTON_COLOURS,     #button 2
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
-buttons.append(render.Button(main_screen, position = (255, 300), text='Reset api_key', font = None, font_colour = (250, 250, 250), font_size = 24, bg_colours = BUTTON_COLOURS,  #button 3
+
+buttons.append(render.Button(main_screen, position = (255, 300), rect_padding=True, text='Reset api_key', font = None, font_colour = (250, 250, 250), font_size = 24, bg_colours = BUTTON_COLOURS,  #button 3
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
 
 for _ in buttons:
