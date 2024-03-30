@@ -4,6 +4,7 @@ import pygame
 import render
 import keyboard as kboard
 import pyperclip as pyclip
+import threading as thr
 print("Done importing ✓")
 
 #variables init
@@ -20,6 +21,7 @@ clipboard_text = ''
 input_fields = []
 buttons = []
 buttons_ready = []
+finished_transcribing_thread = True
 #variables init end
 
 def check_all_buttons_ready(except_buttons: list):
@@ -34,6 +36,48 @@ def check_all_buttons_ready(except_buttons: list):
         return True
     else:
         return False        
+    
+def transcribe():
+    if not openai_inisialised:
+        #OpenAI inisialisation
+        try:
+            print("OpenAI inisialisation")
+            client = OpenAI(api_key=current_api_key)
+            print("Inisialised succesfuly ✓")
+        except:
+            print("Client failed to load try running the code again, if the error will remain to pop up, ask Leo to fix the key to the openai ")
+            return None
+    #Audio file loading with the name of name_of_the_audio
+    try:
+        audio_file = open(name_of_the_audio, "rb")
+        print("Audio file loaded succesfuly ✓")
+    except FileNotFoundError:
+        print("Aduio file wasnt found, there is no file in the folder or it is not named audio.mp3 ")
+        return None
+    except:
+        print("Unknown error while loading file, it was found though :) Just try running the code again ")
+        return None
+        
+
+    
+    try:
+        print("Transcibing...")
+        transcription = client.audio.transcriptions.create(model="whisper-1", file=audio_file)
+        print("Transcribing succesfuly ✓")
+    except:
+        print("Transcribing failed, check internet avialability or run the code again, possibly the format of your audio is not supported\nIt is advised to use mp3,mp4,mpeg and wav")
+        return None
+        
+
+    print(transcription)
+
+    text_file = open(name_of_the_result,'w')
+    text_file.write(transcription.text)
+    text_file.close()
+
+    audio_file.close()
+    
+    finished_transcribing_thread = True
 
 #Inisialisations of the input fields and buttons
 main_screen = render.Screen((600,500))
@@ -61,6 +105,8 @@ buttons.append(render.Button(main_screen, position = (255, 300), rect_padding=Tr
 
 for _ in buttons:
     buttons_ready.append(False)
+
+transcribeThread = thr.Thread(target=transcribe)
 
 while running:
     main_screen.screen.fill(main_screen.fill)
@@ -110,46 +156,16 @@ while running:
 
     main_screen.clock.tick(120)  # limits FPS to 120
     
-    if check_all_buttons_ready(except_buttons=[3]):
-        #OpenAi inisialisation
-        if not openai_inisialised:
-            try:
-                print("OpenAI inisialisation")
-                client = OpenAI(api_key=current_api_key)
-                print("Inisialised succesfuly ✓")
-            except:
-                print("Client failed to load try running the code again, if the error will remain to pop up, ask Leo to fix the key to the openai ")
-                exit()
-        #Audio file loading with the name of name_of_the_audio
-        try:
-            audio_file = open(name_of_the_audio, "rb")
-            print("Audio file loaded succesfuly ✓")
-        except FileNotFoundError:
-            print("Aduio file wasnt found, there is no file in the folder or it is not named audio.mp3 ")
-            exit()
-        except:
-            print("Unknown error while loading file, it was found though :) Just try running the code again ")
-            exit()
-
-        #Transcibing if choice to transcribe is y or Y or true
-        try:
-            print("Transcibing...")
-            transcription = client.audio.transcriptions.create(model="whisper-1", file=audio_file)
-            print("Transcribing succesfuly ✓")
-        except:
-            print("Transcribing failed, check internet avialability or run the code again")
-
-        print(transcription)
-
-        text_file = open(name_of_the_result,'w')
-        text_file.write(transcription.text)
-        text_file.close()
-
-        audio_file.close()
+    if check_all_buttons_ready(except_buttons=[4]) and finished_transcribing_thread:
+        finished_transcribing_thread = False
         
+        print("in the if")
+        
+        transcribeThread.start()
+        
+        print("after start")
         for button in buttons:
             button.state = 0
-            
 pygame.quit()
 exit()
 # pygame setup
