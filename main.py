@@ -20,7 +20,6 @@ clipboard_text = ''
 
 input_fields = []
 buttons = []
-buttons_ready = []
 finished_transcribing_thread = True
 #variables init end
 
@@ -103,8 +102,7 @@ buttons.append(render.Button(main_screen, position = (255, 400), rect_padding=Tr
 buttons.append(render.Button(main_screen, position = (255, 300), rect_padding=True, text='Reset api_key', font = None, font_colour = (250, 250, 250), font_size = 24, bg_colours = BUTTON_COLOURS,  #button 3
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 3))
 
-for _ in buttons:
-    buttons_ready.append(False)
+buttons_ready = [False for _ in buttons]
 
 transcribeThread = thr.Thread(target=transcribe)
 
