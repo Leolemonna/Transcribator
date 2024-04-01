@@ -2,8 +2,7 @@ import pygame
 
 SPECIAL_CHATACTERS = (pygame.K_BACKSPACE, pygame.K_RETURN, pygame.K_SPACE)
 
-VERSION = "v0.2a"
-
+VERSION = "v0.4b"
 
 class Screen:
     def __init__(self, size: list, caption = "Transcribator " + VERSION, fill = (250,250,250)):
@@ -16,8 +15,31 @@ class Screen:
         
         self.clock = pygame.time.Clock()
 
+class Text:
+    """This is a class for writing text in the pygame window"""
+    def __init__(self, screen: Screen, text, **kwargs) -> None:
+        self.text = text
+        self.screen = screen
+        
+        self.pos         = kwargs["position"]
+        self.font        = kwargs["font"]
+        self.font_colour = kwargs["font_colour"]
+        self.font_size   = kwargs["font_size"]
+        self.bg_colour  = kwargs["bg_colour"]
+        
+        self.surface_font = pygame.font.Font(self.font, self.font_size)
+        
+        self.img = self.surface_font.render(self.text, True, self.font_colour)
+    
+    def displayText(self):
+        self.img = self.surface_font.render(self.text, True, self.font_colour)
+        self.screen.screen.blit(self.img, (self.pos[0], self.pos[1]))
+        if self.bg_colour == None:
+            pass
+        else:
+            pass # Ill do rect later
 
-class InputField:
+class InputField (Text):
     def __init__(self, screen: Screen, **kwargs):
         self.screen = screen
         
@@ -35,25 +57,22 @@ class InputField:
         self.min_width   = kwargs["min_width"]
         self.extra_width = kwargs["extra_width"]
 
-        self.rect = pygame.Rect(self.pos[0], self.pos[1], 100, self.font_size)
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], 100, self.font_size+self.offset)
 
-        self.surface_font = pygame.font.Font(self.font,self.font_size)
+        super().__init__(self.screen,self.text, position = (self.rect.x+self.offset, self.rect.y+self.offset),font = self.font, font_size = self.font_size, font_colour = (0, 0, 0), bg_colour = None)
+        
         self.display_input()
-        self.rect.w = max(self.min_width, self.img.get_width())  # starting width ONLY
 
     def display_input(self):
-        self._draw_text()
         if self.active:
             pygame.draw.rect(self.screen.screen, self.bg_colour_active, self.rect, self.border)
         else:
             pygame.draw.rect(self.screen.screen, self.bg_colour_passive, self.rect, self.border)
+            
+        self.displayText()
         self.rect.w = max(self.min_width, self.img.get_width()+self.extra_width)
 
-    def _draw_text(self):
-        self.img = self.surface_font.render(self.text, True, self.font_colour)
-        self.screen.screen.blit(self.img, (self.rect.x+self.offset, self.rect.y+self.offset))
-
-    def check_input(self, event):
+    def check_input(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.active = True
@@ -74,8 +93,7 @@ class InputField:
                 except:
                     self.text += event.text
 
-
-class Button:   
+class Button (Text):   
     def __init__(self, screen: Screen, text = 'Submit', rect_padding: bool = False, **kwargs):
         self.screen = screen
 
@@ -105,9 +123,7 @@ class Button:
         
         self.rect = pygame.Rect(self.pos[0], self.pos[1], self.width, self.font_size)
 
-        self.surface_font = pygame.font.Font(self.font,self.font_size)
-        
-        self._draw_text() # I called it here just to create self.img tbh, idk why i didnt just put in self.img = ...
+        super().__init__(self.screen,self.text, position = (self.rect.x+self.offset, self.rect.y+self.offset),font = self.font, font_size = self.font_size, font_colour = (0, 0, 0), bg_colour = None)
         
     def display(self):
         self.rect.w = max(self.width, self.img.get_width()+self.extra_width)
@@ -115,17 +131,11 @@ class Button:
         pygame.draw.rect(self.screen.screen, self.bg_colours[self.state], self.rect, self.border)
         if self.rect_padding_bool:
             self.rect_padding.w = max(self.width, self.img.get_width()+self.extra_width)
-            if self.state == 0:
-                pygame.draw.rect(self.screen.screen, self.bg_colours[4], self.rect_padding, self.extra_Rectboder)
-            else:
-                pygame.draw.rect(self.screen.screen, self.bg_colours[self.state-1], self.rect_padding, self.extra_Rectboder)
-        self._draw_text()
-        
-        
-    
-    def _draw_text(self):
-        self.img = self.surface_font.render(self.text, True, self.font_colour)
-        self.screen.screen.blit(self.img, (self.rect.x+self.offset, self.rect.y+self.offset))
+            # if self.state == 0: I used to do it this way but it seems to look better with static colour for the frame
+            pygame.draw.rect(self.screen.screen, self.bg_colours[4], self.rect_padding, self.extra_Rectboder)
+            # else:
+                # pygame.draw.rect(self.screen.screen, self.bg_colours[self.state-1], self.rect_padding, self.extra_Rectboder)
+        self.displayText()
     
     def check_ready(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEMOTION:
@@ -143,8 +153,44 @@ class Button:
             if event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.state = 3
                 
-class Text:
-    """This is a class for writing text in the pygame window"""
-    def __init__(self, text, **kwargs) -> None:
-        self.text = text
+class FileButton(Button):
+    def __init__(self, screen: Screen, text, line_len: int, rect_padding: bool = False, line_colour: tuple = (140,140,140),**kwargs):
+        super().__init__(screen, text, rect_padding, **kwargs)
         
+        self.line_len = line_len
+        self.line_colour = line_colour
+        self.selected = False
+    
+    def display(self):
+        super().display()
+        pygame.draw.line(self.screen.screen, self.line_colour, (self.rect.x-3, self.rect.y+self.rect.h//2), (self.rect.x-self.line_len-3, self.rect.y+self.rect.h//2))
+        
+    def check_ready(self, event: pygame.event.Event):
+        super().check_ready(event)
+        
+        if self.state == 3 and not self.selected:
+            self.selected = True
+            self.target_index = len(self.text)
+            self.text += " - selected"
+        
+        elif self.state != 3 and self.selected == True:
+            self.selected = False
+            self.text = self.text[:self.target_index]
+    
+    def find_extension(self):        
+        tmp = 0
+        self.extension = ''
+        
+        for index in range(len(self.text)):
+            char = self.text[index]
+            
+            if (char != " " or char != '.') and tmp == 0:
+                continue
+            elif char == '.':
+                tmp = 1
+                continue
+            elif char != '.' and tmp == 1 and char != ' ':
+                self.extension += char
+                continue
+            elif char == ' ' and tmp != 0:
+                break

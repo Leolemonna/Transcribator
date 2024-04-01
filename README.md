@@ -21,10 +21,9 @@ Make sure that the audio file is in the **same folder** as the main.py. Press d
 
 ## Ideas for the new versions
 * make the ui just visually pleasing <- that's a hard one. 😄
-* loading of the multiple files in the sequence so that itll be easier to use if you need to do multiple files at once.
-* show what audio file are the in the folder and to be able to select them in sideview.
 * add optional separation of the resulted trascript into different peoples' phrases. Basically speaking, if the resulting text is a dialogue, you could slice it into pieces of phrases according to the people who speak.
-
+* be able to select text and ctrl+c it
+* before clicking Transcribe button you should be able to see the names of the result text files. _e.g. if you selected 1.mp3 and audio.mp3 it would say on the side: you will get 1.txt and audio.txt files as a result in your folder_
 ## Contributing
 Idk yet about that
 
