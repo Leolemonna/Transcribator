@@ -8,12 +8,11 @@ If you try running main.py you will need pygame, pyperclip and keyboard installe
 ### How to use
 
 1. Run main.exe file _or_ python file main.py.
-2. Type in audio file name **with** extension _e.g.: very_important_audio<span style="color:yellow">.mp3</span>_.
-Make sure that the audio file is in the **same folder** as the main.py. Press d
-3. Type in the name of the result text file with audio transcribed.
-4. Type in a valid api key.
-5. Press **all** Submit buttons and Transcribe button. (Order doesn't matter)
-6. The main ui will freeze as long as it is transcribing but you can still see the feedback of the application through the console window. 😄
+2. Select audio file in the sideview
+3. Type in a valid api key.
+4. Press **all Submit** buttons and Transcribe button. (Order doesn't matter, you dont need to press reset api key as well)
+5. It will transcribe the audio files selected and return the feedback creating new files with the same names as the audio files'. 😄
+<br/>You can also press ctrl+d if the input field is active(green) and it will clear it. This way you can easily erase api key entered with only two buttons.
 
 #### <br/>Extra
 > [!IMPORTANT] 
