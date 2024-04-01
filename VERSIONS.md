@@ -1,5 +1,4 @@
 # Versions:
-# Versions:
 #### v0.1 basic file loading and transcribing
 This was the first version that didnt have gui, only console was used.
 
