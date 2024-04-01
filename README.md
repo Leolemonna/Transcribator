@@ -24,6 +24,8 @@ Make sure that the audio file is in the **same folder** as the main.py. Press d
 * add optional separation of the resulted trascript into different peoples' phrases. Basically speaking, if the resulting text is a dialogue, you could slice it into pieces of phrases according to the people who speak.
 * be able to select text and ctrl+c it
 * before clicking Transcribe button you should be able to see the names of the result text files. _e.g. if you selected 1.mp3 and audio.mp3 it would say on the side: you will get 1.txt and audio.txt files as a result in your folder_
+* being able to update the file list with a button, right now it does not update by itself
+
 ## Contributing
 Idk yet about that
 
