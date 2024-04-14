@@ -152,7 +152,7 @@ class Button (Text):
         elif self.state == 2:
             if event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(event.pos[0], event.pos[1]):
                 self.state = 3
-                
+
 class FileButton(Button):
     def __init__(self, screen: Screen, text, line_len: int, rect_padding: bool = False, line_colour: tuple = (140,140,140),**kwargs):
         super().__init__(screen, text, rect_padding, **kwargs)
@@ -194,3 +194,15 @@ class FileButton(Button):
                 continue
             elif char == ' ' and tmp != 0:
                 break
+
+# Trash that I don't want to delete:
+# 
+# class Image_Button (Button):
+#     def __init__(self, screen: Screen, image_name: str, rect_padding: bool = False, **kwargs):
+#         text=''
+#         super().__init__(screen, text, rect_padding, **kwargs)
+#         self.image = pygame.image.load(image_name).convert()
+    
+#     def display(self):
+#         super().display()
+#         self.screen.screen.blit(self.image, self.pos)

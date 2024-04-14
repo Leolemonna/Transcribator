@@ -17,3 +17,6 @@ it hopefully solved the ui window freeze since now one of the threads will be wa
 
 #### v0.4b
  - minor change to the appearance including file buttons and extra text
+
+#### v0.5
+ - being able to update the file list with a button - "refresh file menu"

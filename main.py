@@ -28,6 +28,8 @@ TEXT_OFFSETX: int = 12
 FILE_BUTTONSX = SIDEVIEW_POSX+TEXT_OFFSETX
 SUBMIT_BUTTON_X = 460
 SUBMIT_BUTTON_SEPARATION = 30
+file_buttons_parameteres = dict(rect_padding=True, font = None, font_colour = (250, 250, 250), font_size = 22, bg_colours = FILE_BUTTONS_COLOURS,
+                                      offset = 4, border = 0, width = 30, extra_width = 8, extra_Rectborder = 1)
 file_buttons_separator_size: int = 23
 current_api_key = None
 running = True
@@ -127,6 +129,18 @@ def transcribe():
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(target_audio_names)) as executor:
             executor.map(_inner_transcribe, target_audio_names)
 
+def update_file_menu():
+    file_buttons.clear()
+    
+    file_button_pos = [FILE_BUTTONSX, 5]
+    files = [f for f in os.listdir() if os.path.isfile(f)]
+    
+    for file in files:
+        file_button_pos[1] += file_buttons_separator_size
+        file_buttons.append(render.FileButton(main_screen, file, 4, position = file_button_pos, **file_buttons_parameteres))
+    
+    file_buttons_selected = [False for _ in file_buttons]
+
 #Inisialisations of the input fields and buttons and file renderers
 main_screen = render.Screen((870, 500), fill = (255, 255, 255))
 main_screen.display.set_icon(ICON)
@@ -147,17 +161,13 @@ buttons.append(render.Button(main_screen, position = (255, 400), rect_padding=Tr
 buttons.append(render.Button(main_screen, position = (SUBMIT_BUTTON_X, SUBMIT_BUTTON_SEPARATION*2+10), rect_padding=True, text='Reset api_key', font = None, font_colour = (250, 250, 250), font_size = 22, bg_colours = BUTTON_COLOURS,  #button 3
                                       offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 1))
 
-file_button_pos = [FILE_BUTTONSX, 5]
+refresh_button = render.Button(main_screen, position = (SUBMIT_BUTTON_X, SUBMIT_BUTTON_SEPARATION*3+10), rect_padding=True, text='Refresh file menu', font = None, font_colour = (250, 250, 250), font_size = 22, bg_colours = BUTTON_COLOURS,
+                                      offset = 5, border = 0, width = 30, extra_width = 10, extra_Rectborder = 1)
 
-for file in files:
-    file_button_pos[1] += file_buttons_separator_size
-    file_buttons.append(render.FileButton(main_screen, file, 4, rect_padding=True, font = None, position = file_button_pos, font_colour = (250, 250, 250), font_size = 22, bg_colours = FILE_BUTTONS_COLOURS,
-                                      offset = 4, border = 0, width = 30, extra_width = 8, extra_Rectborder = 1))
+update_file_menu()
 
 file_text_title = render.Text(main_screen, "Files in your folder: ", position = (SIDEVIEW_POSX+TEXT_OFFSETX, 5), font = None, font_colour = (0,0,0), font_size = 24, bg_colour = None)
 api_text_title = render.Text(main_screen, "Your API key: ", position = (TEXT_OFFSETX, 5), font = None, font_colour = (0,0,0), font_size = 24, bg_colour = None)
-
-del file, file_button_pos, FILE_BUTTONSX
 
 buttons_ready = [False for _ in buttons]
 file_buttons_selected = [False for _ in file_buttons]
@@ -176,6 +186,7 @@ while running:
             file_button = file_buttons[index]
             file_button.check_ready(event)
         api_key_infield.check_input(event)
+        refresh_button.check_ready(event)
     #file buttons handling audio naming
     for index in range(number_of_file_buttons):
         file_button = file_buttons[index]
@@ -198,6 +209,7 @@ while running:
     for file_button in file_buttons:
         file_button.display()
     
+    refresh_button.display()
     file_text_title.displayText()
     api_text_title.displayText()
     separator_line(main_screen.screen, (0, 0, 0), pygame.math.Vector2(SIDEVIEW_POSX, 0), pygame.math.Vector2(SIDEVIEW_POSX, main_screen.screen.get_height()), width=2)
@@ -220,6 +232,10 @@ while running:
             #   if the buttons are ready then the buttons ready bool will be assigned true respectfully to their index in buttons list
             #   if the buttons arent ready then the bool will be false
             buttons_ready[index] = False
+    
+    if refresh_button.state == 3:
+        update_file_menu()
+        refresh_button.state = 1
     
     if check_all_buttons_ready(except_buttons=[3]):
         
